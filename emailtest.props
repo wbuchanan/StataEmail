@@ -1,0 +1,13 @@
+mail.debug=true
+mail.transport.protocol=smtps
+mail.smtp.username=myusername
+mail.smtp.password=mypassword
+mail.smtp.host=mymailhost
+mail.smtp.port=465
+mail.smtp.auth=true
+mail.smtp.ssl.enable=true
+mail.smtp.ssl.trust=mymailhost
+mail.smtp.starttls.enable=true
+mail.smtp.starttls.required=true
+mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+mail.smtp.socketFactory.fallback=true
