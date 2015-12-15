@@ -149,7 +149,7 @@ class EmailTest {
 		this.protocol = this.mailprops.getProperty(String.valueOf(this.proto));
 
 		this.sender.setHost(this.host);
-		this.sender.setPort(Integer.valueOf(mailprops.getProperty(String.valueOf(this.prtnum))));
+		this.sender.setPort(Integer.valueOf(this.port));
 		this.sender.setPassword(this.password);
 		this.sender.setUsername(this.username);
 		this.sender.setProtocol(this.protocol);
