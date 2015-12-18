@@ -100,7 +100,7 @@ class EmailTest {
 		this.setProperties(stargs[0]);
 
 		if (stargs[5].equals("smtps") ||
-			this.mailprops.getProperty("mail.transport.protocol").equals("smtps")) {
+			"smtps".equals(this.mailprops.getProperty("mail.transport.protocol"))) {
 			this.prtnum = SMTPS_PORT;
 			this.pwd = SMTPS_PASSWORD;
 			this.proto = SMTPS_PROTOCOL;
