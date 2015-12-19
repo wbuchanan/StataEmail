@@ -13,8 +13,8 @@ prog def email
         To(string asis) Cc(string asis) BCc(string asis)                     ///
         SUBject(string asis) REPlyto(string asis) Body(string asis)          ///
         PASSword(string asis) Attachments(string asis) DEBug                 ///
-        Username(string asis) Priority(integer 2) Validate                   ///
-        Inline(string asis) HTML Host(string asis) Port(string asis)         ///
+        Username(string asis) Priority(integer 0) Validate                   ///
+        Inline(string asis) HTML Host(string asis) POrt(string asis)         ///
         PROTocol(string asis) ]
 
     // Check for required data for Java application
@@ -61,20 +61,19 @@ prog def email
     else loc htmlcontent true
 
     // Call Java plugin to send email
+    /*
     javacall org.paces.Stata.StataEmail sendMail,                            ///
     args("`properties'" "`host'" "`port'" "`password'" "`username'"          ///
     "`protocol'" "`attachments'" "`inline'" "`from'" "`htmlcontent'"         ///
     "`body'" "`subject'" "`to'" "`cc'" "`bcc'" "`replyto'" "`priority'"      ///
     "`validate'")
+    */
 
-    /*
-    ! java -jar ///
-    "/Users/billy/Library/Application Support/Stata/ado/personal/email.jar" ///
-     `properties' "`host'"    ///
+    ! java -jar "`c(sysdir_personal)'e/email.jar" `properties' "`host'"      ///
     "`port'" "`password'" "`username'" "`protocol'" "`attachments'"          ///
     "`inline'" "`from'" "`htmlcontent'" "`body'" "`subject'" "`to'" "`cc'"   ///
     "`bcc'" "`replyto'" "`priority'" "`validate'"
-    */
+
 
 // End program definition
 end
