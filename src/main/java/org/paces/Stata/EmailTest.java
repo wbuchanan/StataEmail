@@ -24,7 +24,7 @@ class EmailTest {
 	/***
 	 * Spring.io JavaMailSenderImplementation Object
 	 */
-	final JavaMailSenderImpl sender = new JavaMailSenderImpl();
+	private final JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
 	/***
 	 * JavaMail properties
@@ -42,40 +42,20 @@ class EmailTest {
 	private MimeMessage message;
 
 	/***
-	 * A JavaMail Session Object
-	 */
-	private Session session;
-
-	/***
 	 * Option to specify if a multipart message is required
 	 */
 	private boolean ismultipart = false;
 
-	/***
-	 * Option to specify if the user is passing embedded HTML content
-	 */
-	private boolean htmlcontent = false;
-
-	/***
-	 * Parameters used for sending and authenticating
- 	 */
-	private final String username, password, port, host, protocol;
-
-	public static final String SMTP_HOST = "mail.smtp.host";
-	public static final String SMTP_PORT = "mail.smtp.port";
-	public static final String SMTP_USERNAME = "mail.smtp.username";
-	public static final String SMTP_PASSWORD = "mail.smtp.password";
-	public static final String SMTP_PROTOCOL = "mail.transport.protocol";
-	public static final String SMTPS_HOST = "mail.smtps.host";
-	public static final String SMTPS_PORT = "mail.smtps.port";
-	public static final String SMTPS_USERNAME = "mail.smtps.username";
-	public static final String SMTPS_PASSWORD = "mail.smtps.password";
-	public static final String SMTPS_PROTOCOL = "mail.transport.protocol";
-	public Object hstname;
-	public Object prtnum;
-	public Object pwd;
-	public Object uname;
-	public Object proto;
+	private static final String SMTP_HOST = "mail.smtp.host";
+	private static final String SMTP_PORT = "mail.smtp.port";
+	private static final String SMTP_USERNAME = "mail.smtp.username";
+	private static final String SMTP_PASSWORD = "mail.smtp.password";
+	private static final String SMTP_PROTOCOL = "mail.transport.protocol";
+	private static final String SMTPS_HOST = "mail.smtps.host";
+	private static final String SMTPS_PORT = "mail.smtps.port";
+	private static final String SMTPS_USERNAME = "mail.smtps.username";
+	private static final String SMTPS_PASSWORD = "mail.smtps.password";
+	private static final String SMTPS_PROTOCOL = "mail.transport.protocol";
 
 	/***
 	 * Main method for class used primarily for testing
@@ -94,68 +74,71 @@ class EmailTest {
 	 * Class Constructor method
 	 * @param stargs Arguments passed from javacall command in Stata
 	 */
-	public EmailTest(String[] stargs) throws MessagingException {
+	EmailTest(String[] stargs) throws MessagingException {
+
+		// Make all of these variables local to the class initializer to better insulate the data for security purposes
+		String prtnum, pwd, proto, hstname, uname, host, port, password, username, protocol;
 
 		// Set the JavaMail properties
 		this.setProperties(stargs[0]);
 
 		if (stargs[5].equals("smtps") ||
 			"smtps".equals(this.mailprops.getProperty("mail.transport.protocol"))) {
-			this.prtnum = SMTPS_PORT;
-			this.pwd = SMTPS_PASSWORD;
-			this.proto = SMTPS_PROTOCOL;
-			this.hstname = SMTPS_HOST;
-			this.uname = SMTPS_USERNAME;
+			prtnum = SMTPS_PORT;
+			pwd = SMTPS_PASSWORD;
+			proto = SMTPS_PROTOCOL;
+			hstname = SMTPS_HOST;
+			uname = SMTPS_USERNAME;
 		}
 		else {
-			this.hstname = SMTP_HOST;
-			this.prtnum = SMTP_PORT;
-			this.pwd = SMTP_PASSWORD;
-			this.proto = SMTP_PROTOCOL;
-			this.uname = SMTP_USERNAME;
+			hstname = SMTP_HOST;
+			prtnum = SMTP_PORT;
+			pwd = SMTP_PASSWORD;
+			proto = SMTP_PROTOCOL;
+			uname = SMTP_USERNAME;
 		}
 
 
 		if (!stargs[1].isEmpty()) {
 			// Get the host property
-			this.mailprops.put(this.hstname, stargs[1]);
+			this.mailprops.put(hstname, stargs[1]);
 		}
 
 		if (!stargs[2].isEmpty()) {
 			// Get the port property
-			this.mailprops.put(this.prtnum, stargs[2]);
+			this.mailprops.put(prtnum, stargs[2]);
 		}
 
 		if (!stargs[3].isEmpty()) {
 			// Get the password property
-			this.mailprops.put(this.pwd, stargs[3]);
+			this.mailprops.put(pwd, stargs[3]);
 		}
 
 		if (!stargs[4].isEmpty()) {
 			// Get the username property
-			this.mailprops.put(this.uname, stargs[4]);
+			this.mailprops.put(uname, stargs[4]);
 		}
 
 		if (!stargs[5].isEmpty()) {
 			// Get the Properties directly from options in the Stata program
 			// Get the protocol property
-			this.mailprops.put(this.proto, stargs[5]);
+			this.mailprops.put(proto, stargs[5]);
 		}
 
-		this.host = this.mailprops.getProperty(String.valueOf(this.hstname));
-		this.port = mailprops.getProperty(String.valueOf(this.prtnum));
-		this.password = this.mailprops.getProperty(String.valueOf(this.pwd));
-		this.username = this.mailprops.getProperty(String.valueOf(this.uname));
-		this.protocol = this.mailprops.getProperty(String.valueOf(this.proto));
+		host = this.mailprops.getProperty(hstname);
+		port = this.mailprops.getProperty(prtnum);
+		password = this.mailprops.getProperty(pwd);
+		username = this.mailprops.getProperty(uname);
+		protocol = this.mailprops.getProperty(proto);
 
-		this.sender.setHost(this.host);
-		this.sender.setPort(Integer.valueOf(this.port));
-		this.sender.setPassword(this.password);
-		this.sender.setUsername(this.username);
-		this.sender.setProtocol(this.protocol);
+		this.sender.setHost(host);
+		this.sender.setPort(Integer.parseInt(port));
+		this.sender.setPassword(password);
+		this.sender.setUsername(username);
+		this.sender.setProtocol(protocol);
 
 		// initializes the password authentication object
-		pwauth = new PasswordAuthentication(this.username, this.password);
+		pwauth = new PasswordAuthentication(username, password);
 
 		// Creates a new authenticator with the user/pw passed to it.
 		Authenticator auth = new Authenticator() {
@@ -178,13 +161,13 @@ class EmailTest {
 		};
 
 		// Creates a session Object
-		this.session = Session.getInstance(this.mailprops, auth);
+		Session session = Session.getInstance(this.mailprops, auth);
 
 		// Set the Properties for the sender object
 		this.sender.setJavaMailProperties(this.mailprops);
 
 		// Sets the session value for the JavaMailSenderImpl object
-		this.sender.setSession(this.session);
+		this.sender.setSession(session);
 
 		// Creates new message object
 		this.message = sender.createMimeMessage();
@@ -193,27 +176,19 @@ class EmailTest {
 		this.checkAttachments(stargs[6], stargs[7]);
 
 		// Set the FROM field of the distrolist
-		if (!stargs[8].isEmpty()) {
-			this.helper.setFrom(stargs[8]);
-		}
-		else {
-			this.helper.setFrom(this.username);
-		}
+		if (!stargs[8].isEmpty()) this.helper.setFrom(stargs[8]);
+		else this.helper.setFrom(username);
 
 		// Check for user specified HTML content
-		this.htmlcontent = Boolean.valueOf(stargs[9]);
+		boolean htmlcontent = Boolean.valueOf(stargs[9]);
 
 		// Sets the content for the body.  HTML content is triggered
 		// automatically if user specifies any
-		this.helper.setText(stargs[10], this.htmlcontent);
+		this.helper.setText(stargs[10], htmlcontent);
 
 		// Sets the subject line for the email
-		if (!stargs[11].isEmpty()) {
-			this.helper.setSubject(stargs[11]);
-		}
-		else {
-			this.helper.setSubject("StataEmail Message");
-		}
+		if (!stargs[11].isEmpty()) this.helper.setSubject(stargs[11]);
+		else this.helper.setSubject("StataEmail Message");
 
 		// Sets the date to display for when the message was sent
 		this.helper.setSentDate(new Date());
@@ -241,7 +216,7 @@ class EmailTest {
 	/***
 	 * Method to send the email message
 	 */
-	public void sendTheMessage() {
+	void sendTheMessage() {
 
 		// Sends the message
 		this.sender.send(this.message);
@@ -256,22 +231,30 @@ class EmailTest {
 	 * @param attachments Content to be attached to the email as a file
 	 * @param inline Content to be embedded in the message of the email w/HTML.
 	 */
-	private void checkAttachments(String attachments, String inline) throws MessagingException {
-		if (!attachments.isEmpty()) {
-			this.ismultipart = true;
-			createHelper();
-			attachFiles(attachments);
-			attachInlineFiles(inline);
-		} else {
-			createHelper();
+	private void checkAttachments(String attachments, String inline) {
+		try {
+			if (!attachments.isEmpty()) {
+				this.ismultipart = true;
+				createHelper();
+				attachFiles(attachments);
+				attachInlineFiles(inline);
+			} else {
+				createHelper();
+			}
+		} catch (Exception e) {
+			System.out.println(String.valueOf(e));
 		}
 	}
 
 	/***
 	 * Method to intialize the MimeMessageHelper class
 	 */
-	private void createHelper() throws MessagingException {
-		this.helper = new MimeMessageHelper(this.message, this.ismultipart);
+	private void createHelper() {
+		try {
+			this.helper = new MimeMessageHelper(this.message, this.ismultipart);
+		} catch (MessagingException e) {
+			System.out.println(String.valueOf(e));
+		}
 	}
 
 	/***
@@ -297,19 +280,22 @@ class EmailTest {
 	 * @param filenames Comma separated list of file names to insert into the
 	 *                     email
 	 */
-	private void attachInlineFiles(String filenames) throws MessagingException {
-		if (!filenames.isEmpty()) {
-			String[] filenm = filenames.replaceAll(" ", "").split(";");
-			for (String aFilenm : filenm) {
-				String[] resource = aFilenm.split(",");
-				if (!resource[0].isEmpty() && !resource[1].isEmpty()) {
-					FileSystemResource file = new FileSystemResource(new File(resource[0]));
-					helper.addInline(resource[1], file);
+	private void attachInlineFiles(String filenames) {
+		try {
+			if (!filenames.isEmpty()) {
+				String[] filenm = filenames.replaceAll(" ", "").split(";");
+				for (String aFilenm : filenm) {
+					String[] resource = aFilenm.split(",");
+					if (!resource[0].isEmpty() && !resource[1].isEmpty()) {
+						FileSystemResource file = new FileSystemResource(new File(resource[0]));
+						helper.addInline(resource[1], file);
+					}
 				}
 			}
+		} catch (MessagingException e) {
+			System.out.println(String.valueOf(e));
 		}
 	}
-
 	/***
 	 * Method to set the TO field of the distro list
 	 * @param to String with comma separated list of recipients
@@ -346,7 +332,7 @@ class EmailTest {
 	 * Method to set the BCC field of the distro list
 	 * @param bcc String with comma separated list of recipients
 	 */
-	private void setBCC(String bcc) throws MessagingException {
+	private void setBCC(String bcc) {
 		try {
 			if (!bcc.isEmpty()) {
 				String[] bccrecipients = bcc.replaceAll(" ", "").split(",");
@@ -373,9 +359,7 @@ class EmailTest {
 		if (x.length == 2) {
 
 			// If both entries are not empty set the property
-			if (!x[0].isEmpty() && !x[1].isEmpty()) {
-				this.mailprops.setProperty(String.valueOf(x[0]), String.valueOf(x[1]));
-			}
+			if (!x[0].isEmpty() && !x[1].isEmpty()) this.mailprops.setProperty(String.valueOf(x[0]), String.valueOf(x[1]));
 
 		} // End IF Block for properly formatted lines
 
@@ -406,7 +390,7 @@ class EmailTest {
 			BufferedReader br;
 
 			// Initialize the
-			String strLine = "";
+			String strLine;
 
 			// Attempt creating a stream object of the file's lines
 			try {
@@ -428,17 +412,12 @@ class EmailTest {
 				} // End of While loop
 
 			// If there is an exception reading in the file
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 
 				// Print the error message to the Stata console
 				System.out.println(String.valueOf(e));
 
-			} catch (IOException e) {
-
-				// Print the error message to the Stata console
-				System.out.println(String.valueOf(e));
-
-			}  // End of Catch blocks
+			} // End of catch blocks
 
 		} // End IF Block for non-empty method argument
 

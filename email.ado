@@ -61,19 +61,18 @@ prog def email
     else loc htmlcontent true
 
     // Call Java plugin to send email
-    /*
     javacall org.paces.Stata.StataEmail sendMail,                            ///
-    args("`properties'" "`host'" "`port'" "`password'" "`username'"          ///
+    args("`additionalprops'" "`host'" "`port'" "`password'" "`username'"     ///
     "`protocol'" "`attachments'" "`inline'" "`from'" "`htmlcontent'"         ///
-    "`body'" "`subject'" "`to'" "`cc'" "`bcc'" "`replyto'" "`priority'"      ///
+    "`body'" "`subject'" "`to'" "`cc'" "`bcc'" "`replyto'" `priority'        ///
     "`validate'")
-    */
 
+	/*
     ! java -jar "`c(sysdir_personal)'e/email.jar" `properties' "`host'"      ///
     "`port'" "`password'" "`username'" "`protocol'" "`attachments'"          ///
     "`inline'" "`from'" "`htmlcontent'" "`body'" "`subject'" "`to'" "`cc'"   ///
-    "`bcc'" "`replyto'" "`priority'" "`validate'"
-
+    "`bcc'" "`replyto'" `priority' "`validate'"
+	*/
 
 // End program definition
 end

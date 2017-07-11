@@ -1,4 +1,6 @@
 package org.paces.Stata;
+import com.stata.sfi.SFIToolkit;
+
 import javax.mail.*;
 
 /**
@@ -9,6 +11,10 @@ import javax.mail.*;
  */
 public class StataEmail {
 
+	/**
+	 * Main method to call program from Java command line for older versions of Stata
+	 * @param args Parameters defined in email.ado
+	 */
 	public static void main(String[] args) {
 		try {
 			EmailTest newEmail = new EmailTest(args);
@@ -20,7 +26,7 @@ public class StataEmail {
 
 	/***
 	 * Method used to construct a new email message object and send it using
-	 * the Java API from Stata.
+	 * the Java API from Stata. This method is used with Stata 15.
 	 * @param args Part of required method signature
 	 * @return Success indicator (0 = Success; 1 = Error)
 	 */
@@ -54,10 +60,10 @@ public class StataEmail {
 			return(0);
 
 		// If there were any exceptions
-		} catch (MessagingException e) {
+		} catch (Exception e) {
 
 			// Print the stack trace to the Stata console
-			//SFIToolkit.errorln(SFIToolkit.stackTraceToString(e));
+			SFIToolkit.errorln(SFIToolkit.stackTraceToString(e));
 
 			// Return a failure code
 			return(1);
